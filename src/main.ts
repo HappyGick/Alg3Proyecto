@@ -1,6 +1,6 @@
-import { DisplayMode, Engine, Loadable, Loader } from "excalibur";
+import { DisplayMode, Engine, Loadable, Loader} from "excalibur";
 import { Images } from "./resources";
-import { GameScene } from "./scenes/gameScene";
+import { Scenes } from './scenes';
 
 class Game extends Engine {
 
@@ -18,12 +18,16 @@ class Game extends Engine {
     }
   }
 
+  addScenes() {
+    for (let s in Scenes) {
+      this.add(s, Scenes[s]);
+    }
+  }
+
   initialize() {
     
     this.addImages();
-
-    const gameScene = new GameScene();
-    this.add('gameScene', gameScene);
+    this.addScenes();
 
     const loader = new Loader(this.loadableRes);
     this.start(loader).then(() => {
