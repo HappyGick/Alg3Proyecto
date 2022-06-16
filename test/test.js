@@ -1,4 +1,4 @@
-const { test, expectLoaded, expectPage } = require("@excaliburjs/testing");
+import { test, expectLoaded, expectPage } from "@excaliburjs/testing";
 
 test('Vite template', async () => {
     await expectLoaded();

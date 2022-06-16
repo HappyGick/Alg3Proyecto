@@ -1,20 +1,36 @@
-import { Engine, Loader } from "excalibur";
-import { Player } from "./player";
-import { Resources } from "./resources";
+import { DisplayMode, Engine, Loadable, Loader } from "excalibur";
+import { Images } from "./resources";
+import { GameScene } from "./scenes/gameScene";
 
 class Game extends Engine {
-    constructor() {
-      super({width: 800, height: 600});
-    }
-    initialize() {
-      
-      const player = new Player();
-      this.add(player);
 
-      const loader = new Loader([Resources.Sword]);
-      this.start(loader);
+  loadableRes: Loadable<any>[] = [];
+
+  constructor() {
+    super({
+      displayMode: DisplayMode.FillScreen
+    });
+  }
+
+  addImages() {
+    for (let l in Images) {
+      this.loadableRes.push(Images[l]);
     }
   }
-  
-  export const game = new Game();
-  game.initialize();
+
+  initialize() {
+    
+    this.addImages();
+
+    const gameScene = new GameScene();
+    this.add('gameScene', gameScene);
+
+    const loader = new Loader(this.loadableRes);
+    this.start(loader).then(() => {
+      this.goToScene('gameScene');
+    });
+  }
+}
+
+export const game = new Game();
+game.initialize();
