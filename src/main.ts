@@ -1,5 +1,5 @@
 import { DisplayMode, Engine, Loadable, Loader} from "excalibur";
-import { Images } from "./resources";
+import { Images} from "./resources";
 import { Scenes } from './scenes';
 
 class Game extends Engine {
