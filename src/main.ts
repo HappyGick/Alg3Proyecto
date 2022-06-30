@@ -1,10 +1,12 @@
-import { DisplayMode, Engine, Loadable, Loader} from "excalibur";
-import { Images} from "./resources";
+import { DisplayMode, Engine, Loadable, Loader, Vector } from "excalibur";
+import { EventHelper } from "./eventhelper";
+import { Images } from "./resources";
 import { Scenes } from './scenes';
 
 class Game extends Engine {
 
-  loadableRes: Loadable<any>[] = [];
+  private loadableRes: Loadable<any>[] = [];
+  public mousePos: Vector = Vector.Zero;
 
   constructor() {
     super({
@@ -31,8 +33,10 @@ class Game extends Engine {
 
     const loader = new Loader(this.loadableRes);
     this.start(loader).then(() => {
+      EventHelper.initializePointerReference(this.input.pointers.primary);
       this.goToScene('gameScene');
     });
+    
   }
 }
 

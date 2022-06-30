@@ -1,45 +1,48 @@
-import { Actor, GameEvent, PolygonCollider, vec } from "excalibur";
-import { collidesWithPieces } from "../collisiongroups";
+import { Actor, GameEvent, Vector } from "excalibur";
+import { CollisionHelper } from "../collisionhelper";
 import { Images } from "../resources";
-import { ReceptorColor } from "../types";
+import { ChangeColorEventParams, ReceptorColor, SetColorEventParams } from "../types";
 
 export class AReceptor extends Actor {
   private _currentColor: ReceptorColor = "default";
+  private _rotation: number;
 
   private set currentColor(newColor: ReceptorColor) {
     this._currentColor = newColor;
     this.graphics.show(this._currentColor);
   }
 
-  constructor() {
+  constructor(position: Vector, rotation: number) {
     super({
-      pos: vec(150, 150),
-      width: 100,
-      height: 100,
-      collisionGroup: collidesWithPieces
+      pos: position,
+      width: 64,
+      height: 64,
+      collisionGroup: CollisionHelper.collidesWithPieces,
+      collider: CollisionHelper.TriangleCollider()
     });
+    this._rotation = rotation;
   }
 
-  changeColorEvent() {
-    let obj = this;
-    return (e: GameEvent<ReceptorColor>) => {
-      obj.currentColor = e.other!;
-      if (e.other! !== 'default') obj.graphics.opacity = 0.5;
-      else obj.graphics.opacity = 1;
-    }
+  changeColorEvent(e: GameEvent<ChangeColorEventParams>) {
+    if (this._rotation !== e.other!.rotation) return;
+    this.currentColor = e.other!.color;
+    if (e.other!.color !== 'default') this.graphics.opacity = 0.5;
+    else this.graphics.opacity = 1;
   }
 
-  setColorEvent() {
-    let obj = this;
-    return (e: GameEvent<ReceptorColor>) => {
-      obj.currentColor = e.other!;
-      obj.graphics.opacity = 1;
+  setColorEvent(e: GameEvent<SetColorEventParams>) {
+    if (this._rotation !== e.other!.rotation) {
+      e.other!.result(false);
+      return;
     }
+    this.currentColor = e.other!.color;
+    this.graphics.opacity = 1;
+    e.other!.result(true);
   }
 
   setupEvents() {
-    this.events.on('changecolor', this.changeColorEvent());
-    this.events.on('setcolor', this.setColorEvent());
+    this.events.on('changecolor', this.changeColorEvent.bind(this));
+    this.events.on('setcolor', this.setColorEvent.bind(this));
   }
 
   addGraphics() {
@@ -51,8 +54,13 @@ export class AReceptor extends Actor {
     this.graphics.add("purple", Images.PurpleTriangle.toSprite());
   }
 
+  rotatePiece() {
+    this.rotation = this._rotation * (Math.PI / 3);
+  }
+
   onInitialize() {
     this.addGraphics();
     this.setupEvents();
+    this.rotatePiece();
   }
 }

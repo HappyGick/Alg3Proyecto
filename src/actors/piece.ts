@@ -1,73 +1,103 @@
-import { Actor, CollisionEndEvent, CollisionStartEvent, GameEvent, vec, Vector } from "excalibur";
+import { Actor, CollisionEndEvent, CollisionStartEvent, Color, Vector } from "excalibur";
 import { PointerEvent } from "excalibur/build/dist/Input/PointerEvent";
-import { collidesWithReceptors } from "../collisiongroups";
+import { CollisionHelper } from "../collisionhelper";
 import { EventHelper } from "../eventhelper";
+import { MathHelper } from "../mathhelper";
 import { Images } from "../resources";
-import { PieceColor, ReceptorColor } from "../types";
+import { ChangeColorEventParams, PieceColor, SetColorEventParams } from "../types";
 
 export class APiece extends Actor {
-  private _currentColor: PieceColor = "red";
-  private _originalPos: Vector = vec(500, 150);
+  private _currentColor: PieceColor;
+  private _originalPos: Vector;
   private _collidingWith?: Actor;
+  private _rotation: number;
 
-  // NO BORRAR
-  private set currentColor(newColor: PieceColor) {
-    this._currentColor = newColor;
-    this.graphics.show(this._currentColor);
-  }
-
-  constructor() {
+  constructor(color: PieceColor, startPos: Vector, rotation: number) {
     super({
-      pos: vec(500, 150),
-      width: 100,
-      height: 100,
-      collisionGroup: collidesWithReceptors
+      width: 60,
+      height: 55,
+      collisionGroup: CollisionHelper.collidesWithReceptors,
+      collider: CollisionHelper.TriangleCollider(),
+      anchor: MathHelper.triangleAnchor()
     });
+    this._currentColor = color;
+    this._originalPos = startPos;
+    this._rotation = rotation;
+    this.pos = startPos;
+    if (color === 'red') this.angularVelocity = 0.1;
   }
 
-  dragMoveEvent() {
-    // typescript momento, esto es horrible y no me gusta, pero quiero que
-    // el código esté bien organizado y funcione
-    let obj = this;
-    return (e: PointerEvent) => {
-      obj.pos = e.coordinates.worldPos;
-    }
+  dragMoveEvent(e: PointerEvent) {
+    this.pos = e.coordinates.worldPos;
+    EventHelper.unregisterFollowMouseEvent();
+  }
+
+  receptorCollisionResult(res: boolean) {
+    if(res) this.kill()
+    else this.pos = this._originalPos;
   }
 
   dragEndEvent() {
-    let obj = this;
-    return () => {
-      if(obj._collidingWith) {
-        obj._collidingWith.events.emit('setcolor', EventHelper.createEvent<ReceptorColor>(obj._currentColor));
-        obj.kill();
-      } else {
-        obj.pos = obj._originalPos;
+    EventHelper.unregisterFollowMouseEvent();
+    if(this._collidingWith) {
+      EventHelper.emitEvent<SetColorEventParams>(
+        'setcolor',
+        this._collidingWith,
+        { 
+          color: this._currentColor,
+          rotation: this._rotation,
+          result: this.receptorCollisionResult.bind(this),
+        }
+      );
+    } else {
+      this.pos = this._originalPos;
+    }
+  }
+
+  dragEnterEvent() {
+    EventHelper.unregisterFollowMouseEvent();
+  }
+
+  dragLeaveEvent() {
+    EventHelper.registerFollowMouseEvent(this);
+  }
+
+  collisionStartEvent(e: CollisionStartEvent<Actor>) {
+    EventHelper.emitEvent<ChangeColorEventParams>(
+      'changecolor',
+      e.other,
+      {
+        color: this._currentColor,
+        rotation: this._rotation
       }
-    }
+    );
+    this._collidingWith = e.other;
   }
 
-  collisionStartEvent() {
-    let obj = this;
-    return (e: CollisionStartEvent<Actor>) => {    
-      e.other.events.emit('changecolor', EventHelper.createEvent<ReceptorColor>(obj._currentColor));
-      obj._collidingWith = e.other;
-    }
+  collisionEndEvent(e: CollisionEndEvent<Actor>) {
+    if (this.isKilled()) return;
+    EventHelper.emitEvent<ChangeColorEventParams>(
+      'changecolor',
+      e.other,
+      {
+        color: "default",
+        rotation: this._rotation
+      }
+    );
+    this._collidingWith = undefined;
   }
 
-  collisionEndEvent() {
-    let obj = this;
-    return (e: CollisionEndEvent<Actor>) => {
-      if (obj.isKilled()) return;
-      e.other.events.emit('changecolor', EventHelper.createEvent<ReceptorColor>("default"));
-      obj._collidingWith = undefined;
-    }
+  rotatePiece() {
+    this.rotation = this._rotation * (Math.PI / 3);
   }
 
   setupEvents() {
-    this.on('pointerdragmove', this.dragMoveEvent());
-    this.on('pointerdragend', this.dragEndEvent());
-    this.on('collisionstart', this.collisionStartEvent());
-    this.on('collisionend', this.collisionEndEvent());
+    this.on('pointerdragmove', this.dragMoveEvent.bind(this));
+    this.on('pointerdragend', this.dragEndEvent.bind(this));
+    this.on('pointerdragleave', this.dragLeaveEvent.bind(this));
+    this.on('pointerdragenter', this.dragEnterEvent.bind(this));
+    this.on('collisionstart', this.collisionStartEvent.bind(this));
+    this.on('collisionend', this.collisionEndEvent.bind(this));
   }
 
   addGraphics() {
@@ -80,8 +110,9 @@ export class APiece extends Actor {
 
   onInitialize() {
     this.addGraphics();
-    this.graphics.show("red");
+    this.graphics.show(this._currentColor);
     this.setupEvents();
-    console.log(this);
+    this.rotatePiece();
+    console.log(this.anchor);
   }
 }
