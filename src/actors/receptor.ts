@@ -57,7 +57,7 @@ export class AReceptor extends Actor {
   }
 
   rotatePiece() {
-    this.rotation = this._rotation * (Math.PI / 3);
+    this.rotation = this._rotation * Math.PI;
   }
 
   onInitialize() {

@@ -5,7 +5,7 @@ import { PieceGenerator } from "../objects/generators/piecegenerator";
 export class GameScene extends Scene {
     constructor() {
         super();
-        let board: BoardGenerator = new BoardGenerator(1);
+        let board: BoardGenerator = new BoardGenerator(4);
         board.generate(vec(50, 50), this);
         //let p1: APiece = new APiece('purple', vec(500, 150), 0);
         //this.add(p1);
