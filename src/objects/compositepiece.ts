@@ -1,15 +1,18 @@
 import { Scene, vec, Vector } from "excalibur";
+import { ACompositePieceHolder } from "../actors/compositepieceholder";
 import { APiece } from "../actors/piece";
 import { MathHelper } from "../mathhelper";
 import { PieceColor } from "../types";
 
 export class OCompositePiece {
     private _pieces: (APiece | undefined)[];
+    private _origin: Vector;
     private readonly maxPieces: number = 6;
-    private readonly _pieceDistanceFromOrigin: number = MathHelper.triangleHeight;
+    private readonly _pieceDistanceFromOrigin: number = 45;
 
     constructor(color: PieceColor, pieceIndexes: number[], originPos: Vector) {
         this._pieces = [];
+        this._origin = originPos;
         for(let i = 0; i < this.maxPieces; i++) {
             if(pieceIndexes.includes(i)) {
                 this._pieces.push(
@@ -20,7 +23,7 @@ export class OCompositePiece {
                             this._pieceDistanceFromOrigin,
                             i
                         ),
-                        0
+                        i % 2
                     )
                 )
             } else {
@@ -37,8 +40,14 @@ export class OCompositePiece {
     }
 
     addToScene(scene: Scene) {
+        let activePieces: APiece[] = [];
         for (let p of this._pieces) {
-            if (p) scene.add(p);
+            if (p) {
+                activePieces.push(p);
+                scene.add(p);
+            }
         }
+        let holder: ACompositePieceHolder = new ACompositePieceHolder(this._origin, activePieces);
+        scene.add(holder);
     }
 }

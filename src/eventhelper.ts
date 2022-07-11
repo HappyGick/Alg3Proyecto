@@ -3,7 +3,7 @@ import { PointerAbstraction } from "excalibur/build/dist/Input/PointerAbstractio
 import { PointerEvent } from "excalibur/build/dist/Input/PointerEvent";
 
 export class EventHelper {
-    private static pointerReference: PointerAbstraction;
+    public static pointerReference: PointerAbstraction;
     private static followMouseHandler?: (event: PointerEvent) => void;
 
     public static createEvent<T>(params: T) {

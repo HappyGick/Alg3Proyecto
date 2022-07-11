@@ -1,18 +1,21 @@
 import { Scene, vec } from "excalibur";
-import { APiece } from "../actors/piece";
-import { AReceptor } from "../actors/receptor";
-import { OCompositePiece } from "../objects/compositepiece";
+import { BoardGenerator } from "../objects/generators/boardgenerator";
+import { PieceGenerator } from "../objects/generators/piecegenerator";
 
 export class GameScene extends Scene {
     constructor() {
         super();
-        let r1: AReceptor = new AReceptor(vec(150, 150), 1);
-        this.add(r1);
-        let r2: AReceptor = new AReceptor(vec(150, 300), 0);
-        this.add(r2);
-        let p1: APiece = new APiece('purple', vec(500, 150), 0);
-        this.add(p1);
-        let piece: OCompositePiece = new OCompositePiece('red', [0, 1, 2, 3, 4, 5], vec(500, 150));
-        piece.addToScene(this);
+        let board: BoardGenerator = new BoardGenerator(1);
+        board.generate(vec(50, 50), this);
+        //let p1: APiece = new APiece('purple', vec(500, 150), 0);
+        //this.add(p1);
+        let generator: PieceGenerator = new PieceGenerator(
+            [
+                vec(0, 0), vec(1, 0), vec(2, 0),
+                vec(0, 1), vec(1, 1), vec(2, 1)
+            ],
+            'red'
+        );
+        generator.generate(vec(800, 150), this);
     }
 }

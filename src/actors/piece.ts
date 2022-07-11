@@ -1,21 +1,22 @@
-import { Actor, CollisionEndEvent, CollisionStartEvent, Color, Vector } from "excalibur";
-import { PointerEvent } from "excalibur/build/dist/Input/PointerEvent";
+import { Actor, CollisionEndEvent, CollisionStartEvent, Vector } from "excalibur";
 import { CollisionHelper } from "../collisionhelper";
 import { EventHelper } from "../eventhelper";
 import { MathHelper } from "../mathhelper";
 import { Images } from "../resources";
 import { ChangeColorEventParams, PieceColor, SetColorEventParams } from "../types";
+import { ACompositePieceHolder } from "./compositepieceholder";
 
 export class APiece extends Actor {
   private _currentColor: PieceColor;
   private _originalPos: Vector;
   private _collidingWith?: Actor;
   private _rotation: number;
+  private _holder?: ACompositePieceHolder;
 
   constructor(color: PieceColor, startPos: Vector, rotation: number) {
     super({
-      width: 60,
-      height: 55,
+      width: MathHelper.triangleSideLength,
+      height: MathHelper.triangleHeight,
       collisionGroup: CollisionHelper.collidesWithReceptors,
       collider: CollisionHelper.TriangleCollider(),
       anchor: MathHelper.triangleAnchor()
@@ -24,21 +25,21 @@ export class APiece extends Actor {
     this._originalPos = startPos;
     this._rotation = rotation;
     this.pos = startPos;
-    if (color === 'red') this.angularVelocity = 0.1;
   }
 
-  dragMoveEvent(e: PointerEvent) {
-    this.pos = e.coordinates.worldPos;
-    EventHelper.unregisterFollowMouseEvent();
+  public resetPosition() {
+    this.pos = this._originalPos;
   }
 
-  receptorCollisionResult(res: boolean) {
-    if(res) this.kill()
-    else this.pos = this._originalPos;
+  public isColliding(): boolean {
+    return this._collidingWith ? true : false;
   }
 
-  dragEndEvent() {
-    EventHelper.unregisterFollowMouseEvent();
+  public set holder(h: ACompositePieceHolder) {
+    this._holder = h;
+  }
+
+  public finishPlacing() {
     if(this._collidingWith) {
       EventHelper.emitEvent<SetColorEventParams>(
         'setcolor',
@@ -54,12 +55,9 @@ export class APiece extends Actor {
     }
   }
 
-  dragEnterEvent() {
-    EventHelper.unregisterFollowMouseEvent();
-  }
-
-  dragLeaveEvent() {
-    EventHelper.registerFollowMouseEvent(this);
+  receptorCollisionResult(res: boolean) {
+    if(res) this.kill()
+    else this.pos = this._originalPos;
   }
 
   collisionStartEvent(e: CollisionStartEvent<Actor>) {
@@ -72,6 +70,7 @@ export class APiece extends Actor {
       }
     );
     this._collidingWith = e.other;
+    this._holder?.registerReady();
   }
 
   collisionEndEvent(e: CollisionEndEvent<Actor>) {
@@ -85,17 +84,14 @@ export class APiece extends Actor {
       }
     );
     this._collidingWith = undefined;
+    this._holder?.unregisterReady();
   }
 
   rotatePiece() {
-    this.rotation = this._rotation * (Math.PI / 3);
+    this.rotation = this._rotation * Math.PI;
   }
 
   setupEvents() {
-    this.on('pointerdragmove', this.dragMoveEvent.bind(this));
-    this.on('pointerdragend', this.dragEndEvent.bind(this));
-    this.on('pointerdragleave', this.dragLeaveEvent.bind(this));
-    this.on('pointerdragenter', this.dragEnterEvent.bind(this));
     this.on('collisionstart', this.collisionStartEvent.bind(this));
     this.on('collisionend', this.collisionEndEvent.bind(this));
   }
@@ -113,6 +109,5 @@ export class APiece extends Actor {
     this.graphics.show(this._currentColor);
     this.setupEvents();
     this.rotatePiece();
-    console.log(this.anchor);
   }
 }

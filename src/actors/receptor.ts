@@ -1,5 +1,6 @@
 import { Actor, GameEvent, Vector } from "excalibur";
 import { CollisionHelper } from "../collisionhelper";
+import { MathHelper } from "../mathhelper";
 import { Images } from "../resources";
 import { ChangeColorEventParams, ReceptorColor, SetColorEventParams } from "../types";
 
@@ -14,13 +15,14 @@ export class AReceptor extends Actor {
 
   constructor(position: Vector, rotation: number) {
     super({
-      pos: position,
-      width: 64,
-      height: 64,
+      width: MathHelper.triangleSideLength,
+      height: MathHelper.triangleHeight,
       collisionGroup: CollisionHelper.collidesWithPieces,
-      collider: CollisionHelper.TriangleCollider()
+      collider: CollisionHelper.TriangleCollider(),
+      anchor: MathHelper.triangleAnchor()
     });
     this._rotation = rotation;
+    this.pos = position;
   }
 
   changeColorEvent(e: GameEvent<ChangeColorEventParams>) {
