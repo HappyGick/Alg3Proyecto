@@ -1,11 +1,10 @@
 import { vec, Vector } from 'excalibur';
-import templates from '../res/pieceTemplates.json';
-import { PartialTemplate, PieceTemplate } from '../types';
+import templates from '../res/trianglePieceTemplates.json';
+import { PartialTemplate, TrianglePieceTemplate } from '../types';
+import { PieceTemplateManagerBase } from './abstract/base/piecetemplatemanagerbase';
 
-export class TemplateManager {
-    public static templates: PieceTemplate[] = [];
-
-    public static initialize() {
+export class TriangleTemplateManager extends PieceTemplateManagerBase<TrianglePieceTemplate> {
+    public initialize() {
         for(let i in templates) {
             let t: PartialTemplate = templates[i];
             let p: Vector[] = [];
@@ -21,10 +20,5 @@ export class TemplateManager {
 
             this.templates.push({ points: p, headPiece: head});
         }
-    }
-
-    public static randomTemplate() {
-        let t = Math.floor(Math.random() * this.templates.length);
-        return this.templates[t];
     }
 }

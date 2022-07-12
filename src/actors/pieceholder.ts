@@ -2,15 +2,15 @@ import { Actor, Vector } from "excalibur";
 import { CollisionHelper } from "../collisionhelper";
 import { PointerEvent } from "excalibur/build/dist/Input/PointerEvent";
 import { EventHelper } from "../eventhelper";
-import { APiece } from "./piece";
+import { APieceBase } from "../objects/abstract/base/piecebase";
 
-export class ACompositePieceHolder extends Actor {
+export class APieceHolder<T extends APieceBase> extends Actor {
     private _originalPos: Vector;
-    private _pieces: APiece[];
-    private _headPiece: APiece; // cabeza
+    private _pieces: T[];
+    private _headPiece: T; // cabeza
     private followMouseHandler?: (event: PointerEvent) => void;
 
-    constructor(position: Vector, pieces: APiece[], headPiece: APiece) {
+    constructor(position: Vector, pieces: T[], headPiece: T) {
         super({
             pos: position,
             width: 130,

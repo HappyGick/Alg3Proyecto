@@ -1,8 +1,8 @@
 import { Vector, Scene } from "excalibur";
-import { AReceptor } from "../../actors/receptor";
+import { ATriangleReceptor } from "../../actors/trianglereceptor";
 import { HexagonGenerator } from "../abstract/generators/hexagongenerator";
 
-export class BoardGenerator extends HexagonGenerator {
+export class TriangleBoardGenerator extends HexagonGenerator {
     public generate(at: Vector, scene: Scene): void {
         super.generate(at, scene);
         for(let i = 0; i < this._layers * 2; i++) {
@@ -11,7 +11,7 @@ export class BoardGenerator extends HexagonGenerator {
             for(let cell of row) {
                 if (cell){
                     // Aquí harías todo lo de los vecinos y qué sé yo, estas clases son flexibles
-                    scene.add(new AReceptor(cell, rotation));
+                    scene.add(new ATriangleReceptor(cell, rotation));
                     rotation = (rotation + 1) % 2;
                 }
             }

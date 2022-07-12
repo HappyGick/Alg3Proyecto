@@ -1,4 +1,4 @@
-import { Vector } from "excalibur";
+import { Sprite, Vector } from "excalibur";
 
 export type PieceColor = "red" | "green" | "blue" | "purple" | "yellow";
 export type PieceRotation = 0 | 1;
@@ -20,7 +20,9 @@ export type PartialTemplate = {
     head: number
 }
 
-export type PieceTemplate = {
+export type TrianglePieceTemplate = {
     points: Vector[],
     headPiece: number
 }
+
+export type ElementSpriteList = {[color: string]: Sprite}
