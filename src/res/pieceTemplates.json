@@ -1,0 +1,72 @@
+[
+    {
+        "cells": [
+            true, true, true,
+            true, true, true
+        ],
+        "head": 1
+    },
+    {
+        "cells": [
+            true, false, true,
+            true, true, true
+        ],
+        "head": 2
+    },
+    {
+        "cells": [
+            true, false, false,
+            true, true, true
+        ],
+        "head": 0
+    },
+    {
+        "cells": [
+            false, false, false,
+            true, true, true
+        ],
+        "head": 3
+    },
+    {
+        "cells": [
+            true, true, false,
+            false, false, false
+        ],
+        "head": 0
+    },
+    {
+        "cells": [
+            true, false, false,
+            false, false, false
+        ],
+        "head": 0
+    },
+    {
+        "cells": [
+            true, false, true,
+            false, false, false
+        ],
+        "head": 0
+    },
+    {
+        "cells": [
+            true, false, true,
+            false, true, false
+        ],
+        "head": 0
+    },
+    {
+        "cells": [
+            false, true, false,
+            true, true, true
+        ],
+        "head": 1
+    },
+    {
+        "cells": [
+            true, false, true,
+            true, false, true
+        ],
+        "head": 0
+    }
+]

@@ -9,13 +9,15 @@ export abstract class HexagonGenerator extends Generator {
     
     constructor(layers: number) {
         super();
+        let horizontalPadding = MathHelper.triangleSideLength / 10;
+        let verticalPadding = horizontalPadding * 3;
         this._layers = layers;
         this._maxCells = 4 * this._layers - 1;
         this.grid = new GridSystem({
             columns: this._maxCells,
             rows: 2 * this._layers,
-            cellWidth: MathHelper.triangleSideLength / 2 + 6,
-            cellHeight: MathHelper.triangleHeight + 18,
+            cellWidth: MathHelper.triangleSideLength / 2 + horizontalPadding,
+            cellHeight: MathHelper.triangleHeight + verticalPadding,
             cellOrigin: MathHelper.triangleAnchor()
         });
     }

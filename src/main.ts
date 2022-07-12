@@ -1,5 +1,6 @@
 import { DisplayMode, Engine, Loadable, Loader, Vector } from "excalibur";
 import { EventHelper } from "./eventhelper";
+import { TemplateManager } from "./objects/templatemanager";
 import { Images } from "./resources";
 import { Scenes } from './scenes';
 
@@ -28,6 +29,7 @@ class Game extends Engine {
 
   initialize() {
     
+    TemplateManager.initialize();
     this.addImages();
     this.addScenes();
 

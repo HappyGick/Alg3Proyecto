@@ -1,4 +1,4 @@
-import { Actor, Color, Vector } from "excalibur";
+import { Actor, Vector } from "excalibur";
 import { CollisionHelper } from "../collisionhelper";
 import { PointerEvent } from "excalibur/build/dist/Input/PointerEvent";
 import { EventHelper } from "../eventhelper";
@@ -7,34 +7,24 @@ import { APiece } from "./piece";
 export class ACompositePieceHolder extends Actor {
     private _originalPos: Vector;
     private _pieces: APiece[];
-    private _readyToPlace: number = 0;
+    private _headPiece: APiece; // cabeza
     private followMouseHandler?: (event: PointerEvent) => void;
 
-    constructor(position: Vector, pieces: APiece[]) {
+    constructor(position: Vector, pieces: APiece[], headPiece: APiece) {
         super({
             pos: position,
             width: 130,
             height: 130,
             collisionGroup: CollisionHelper.collidesWithNone,
-            color: Color.Black,
             z: -1
         })
         this._originalPos = position;
         this._pieces = pieces;
+        this._headPiece = headPiece;
 
         for(let p of pieces) {
             p.holder = this;
         }
-    }
-
-    public registerReady() {
-        this._readyToPlace += 1;
-        console.log(this._readyToPlace);
-    }
-
-    public unregisterReady() {
-        this._readyToPlace -= 1;
-        console.log(this._readyToPlace);
     }
 
     dragMoveEvent(e: PointerEvent) {
@@ -48,13 +38,9 @@ export class ACompositePieceHolder extends Actor {
 
     dragEndEvent() {
         this.unregisterFollowMouse();
-        if (this._readyToPlace === this._pieces.length) {
-            
-        } else {
-            this.pos = this._originalPos;
-            for(let piece of this._pieces) {
-                piece.resetPosition();
-            }
+        this.pos = this._originalPos;
+        for(let piece of this._pieces) {
+            piece.resetPosition();
         }
     }
 

@@ -5,7 +5,6 @@ import { HexagonGenerator } from "../abstract/generators/hexagongenerator";
 export class BoardGenerator extends HexagonGenerator {
     public generate(at: Vector, scene: Scene): void {
         super.generate(at, scene);
-        console.log(this.grid);
         for(let i = 0; i < this._layers * 2; i++) {
             let row = this.grid.getRowVectors(i, at);
             let rotation = i >= this._layers ? 1 : 0;

@@ -1,17 +1,15 @@
-import { Actor, CollisionEndEvent, CollisionStartEvent, Vector } from "excalibur";
+import { Actor, Vector } from "excalibur";
 import { CollisionHelper } from "../collisionhelper";
-import { EventHelper } from "../eventhelper";
 import { MathHelper } from "../mathhelper";
 import { Images } from "../resources";
-import { ChangeColorEventParams, PieceColor, SetColorEventParams } from "../types";
+import { PieceColor } from "../types";
 import { ACompositePieceHolder } from "./compositepieceholder";
 
 export class APiece extends Actor {
   private _currentColor: PieceColor;
   private _originalPos: Vector;
-  private _collidingWith?: Actor;
   private _rotation: number;
-  private _holder?: ACompositePieceHolder;
+  private _holder?: ACompositePieceHolder; // importante para la colaboración
 
   constructor(color: PieceColor, startPos: Vector, rotation: number) {
     super({
@@ -31,60 +29,8 @@ export class APiece extends Actor {
     this.pos = this._originalPos;
   }
 
-  public isColliding(): boolean {
-    return this._collidingWith ? true : false;
-  }
-
   public set holder(h: ACompositePieceHolder) {
     this._holder = h;
-  }
-
-  public finishPlacing() {
-    if(this._collidingWith) {
-      EventHelper.emitEvent<SetColorEventParams>(
-        'setcolor',
-        this._collidingWith,
-        { 
-          color: this._currentColor,
-          rotation: this._rotation,
-          result: this.receptorCollisionResult.bind(this),
-        }
-      );
-    } else {
-      this.pos = this._originalPos;
-    }
-  }
-
-  receptorCollisionResult(res: boolean) {
-    if(res) this.kill()
-    else this.pos = this._originalPos;
-  }
-
-  collisionStartEvent(e: CollisionStartEvent<Actor>) {
-    EventHelper.emitEvent<ChangeColorEventParams>(
-      'changecolor',
-      e.other,
-      {
-        color: this._currentColor,
-        rotation: this._rotation
-      }
-    );
-    this._collidingWith = e.other;
-    this._holder?.registerReady();
-  }
-
-  collisionEndEvent(e: CollisionEndEvent<Actor>) {
-    if (this.isKilled()) return;
-    EventHelper.emitEvent<ChangeColorEventParams>(
-      'changecolor',
-      e.other,
-      {
-        color: "default",
-        rotation: this._rotation
-      }
-    );
-    this._collidingWith = undefined;
-    this._holder?.unregisterReady();
   }
 
   rotatePiece() {
@@ -92,8 +38,7 @@ export class APiece extends Actor {
   }
 
   setupEvents() {
-    this.on('collisionstart', this.collisionStartEvent.bind(this));
-    this.on('collisionend', this.collisionEndEvent.bind(this));
+    // todos los eventos que necesites colócalos aquí
   }
 
   addGraphics() {

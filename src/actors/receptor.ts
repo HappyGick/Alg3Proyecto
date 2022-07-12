@@ -43,6 +43,10 @@ export class AReceptor extends Actor {
   }
 
   setupEvents() {
+    // Estos dos son eventos para los receptores, si tu método
+    // no permite asegurarle al compilador que el objeto con el que
+    // interactúas es un AReceptor, puedes hacer EventHelper.emit<T>(evento, actor, parámetros: T)
+    // para activar estos eventos
     this.events.on('changecolor', this.changeColorEvent.bind(this));
     this.events.on('setcolor', this.setColorEvent.bind(this));
   }
