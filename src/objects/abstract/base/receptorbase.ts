@@ -1,6 +1,8 @@
 import { Actor, Collider, GameEvent, Vector } from "excalibur";
 import { CollisionHelper } from "../../../collisionhelper";
 import { ChangeColorEventParams, ElementSpriteList, ReceptorColor, SetColorEventParams } from "../../../types";
+import { LogicReceptor } from "../../logic/logicreceptor";
+import { Neighborhood } from "../../logic/neighborhood";
 
 type ReceptorOptions = {
   pos: Vector,
@@ -12,6 +14,7 @@ type ReceptorOptions = {
 
 export abstract class AReceptorBase extends Actor {
   protected _currentColor: ReceptorColor = "default";
+  protected _logicReceptor: LogicReceptor<ReceptorColor,number> = new LogicReceptor<ReceptorColor,number>(this._currentColor,"default");
 
   protected abstract readonly sprites: ElementSpriteList;
 
@@ -29,6 +32,7 @@ export abstract class AReceptorBase extends Actor {
       anchor: options.anchor
     });
     this.pos = options.pos;
+    //TO-DO this._logicReceptor.addSubscriber(colorChanger());
   }
 
   protected abstract changeColorEvent(e: GameEvent<ChangeColorEventParams>): void;
@@ -53,5 +57,16 @@ export abstract class AReceptorBase extends Actor {
   public onInitialize() {
     this.addGraphics();
     this.setupEvents();
+  }
+
+  //Neighbor-related
+  setNeighbors(n:Neighborhood<number,LogicReceptor<ReceptorColor,number>>){
+    this._logicReceptor.setNeighbors(n);
+  }
+  addNeighbor(index:number,newNeighbor:LogicReceptor<ReceptorColor,number>){
+    this._logicReceptor.addNeighbor(index,newNeighbor);
+  }
+  getNeighbor(index:number):LogicReceptor<ReceptorColor,number>|undefined{
+    return this._logicReceptor.getNeighbor(index);
   }
 }

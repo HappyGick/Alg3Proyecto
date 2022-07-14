@@ -19,14 +19,16 @@ export class LogicReceptor<P,I>{
     addNeighbor(index:I,newNeighbor:LogicReceptor<P,I>){
         this.neighbors.add(index,newNeighbor);
     }
-    getNeighbor(index:I){
+    getNeighbor(index:I):LogicReceptor<P,I>|undefined{
         return this.neighbors.get(index);
     }
     placePiece(newPiece:P){
         this.piece = newPiece;
+        this.updateObserver();
     }
     clean(){
         this.piece = this.defaultPiece;
+        this.updateObserver();
     }
     updateObserver(){
         this.observer.update(this.piece);
