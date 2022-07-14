@@ -1,4 +1,4 @@
-type ObserverCallback<T> = (value: T) => void;
+export type ObserverCallback<T> = (value: T) => void;
 
 export class Observer<T> {
     private data:T;
