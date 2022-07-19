@@ -5,14 +5,50 @@ import { HexagonGenerator } from "../abstract/generators/hexagongenerator";
 export class TriangleBoardGenerator extends HexagonGenerator {
     public generate(at: Vector, scene: Scene): void {
         super.generate(at, scene);
+        let hasDownNeighbor;
+        let previousRow:Array<ATriangleReceptor>;
+        let previousReceptor:ATriangleReceptor;
+        let currentRow:Array<ATriangleReceptor>;
+        let currentReceptor:ATriangleReceptor;
+        //to-do add matchChecker someplace here
+        
+        currentRow = new Array<ATriangleReceptor>();
         for(let i = 0; i < this._layers * 2; i++) {
+            let j=0;
+            let isFirst = true;
+            previousRow = currentRow;
+            currentRow = new Array<ATriangleReceptor>();
+            if(i<this._layers){
+                hasDownNeighbor = true;
+            } else {
+                hasDownNeighbor = false;
+            }
             let row = this.grid.getRowVectors(i, at);
             let rotation = i >= this._layers ? 1 : 0;
             for(let cell of row) {
                 if (cell){
-                    // Aquí harías todo lo de los vecinos y qué sé yo, estas clases son flexibles
-                    scene.add(new ATriangleReceptor(cell, rotation));
+                    //! Prueba de sistema de vecinos
+                    currentReceptor = new ATriangleReceptor(cell, rotation);
+                    scene.add(currentReceptor);
                     rotation = (rotation + 1) % 2;
+
+                    if(!isFirst){
+                        currentReceptor.addNeighbor(-1,previousReceptor.getLogicReceptor());
+                        previousReceptor.addNeighbor(1,currentReceptor.getLogicReceptor());
+                    }
+
+                    if(hasDownNeighbor){
+                        currentRow.push(currentReceptor);
+                    } else if (i!=0){
+                        currentReceptor.addNeighbor(0,previousRow[j].getLogicReceptor());
+                        previousRow[j].addNeighbor(0,currentReceptor.getLogicReceptor());
+                        j++;
+                    }
+                    hasDownNeighbor = !hasDownNeighbor;
+                    previousReceptor = currentReceptor;
+                    isFirst = false;
+                    //TEST Is it working?
+                        console.log(currentReceptor);
                 }
             }
         }

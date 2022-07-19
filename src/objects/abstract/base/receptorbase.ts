@@ -60,6 +60,9 @@ export abstract class AReceptorBase extends Actor {
   }
 
   //Neighbor-related
+  getLogicReceptor():LogicReceptor<ReceptorColor,number>{
+    return this._logicReceptor;
+  }
   setNeighbors(n:Neighborhood<number,LogicReceptor<ReceptorColor,number>>){
     this._logicReceptor.setNeighbors(n);
   }
