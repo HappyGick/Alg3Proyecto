@@ -27,7 +27,6 @@ export class TriangleBoardGenerator extends HexagonGenerator {
             let rotation = i >= this._layers ? 1 : 0;
             for(let cell of row) {
                 if (cell){
-                    //! Prueba de sistema de vecinos
                     currentReceptor = new ATriangleReceptor(cell, rotation);
                     scene.add(currentReceptor);
                     rotation = (rotation + 1) % 2;
@@ -47,8 +46,6 @@ export class TriangleBoardGenerator extends HexagonGenerator {
                     hasDownNeighbor = !hasDownNeighbor;
                     previousReceptor = currentReceptor;
                     isFirst = false;
-                    //TEST Is it working?
-                        console.log(currentReceptor);
                 }
             }
         }
