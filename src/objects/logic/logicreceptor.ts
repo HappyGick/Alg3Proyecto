@@ -26,6 +26,9 @@ export class LogicReceptor<P,I>{
         this.piece = newPiece;
         this.updateObserver();
     }
+    getPiece():P{
+        return this.piece;
+    }
     clean(){
         this.piece = this.defaultPiece;
         this.updateObserver();

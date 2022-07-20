@@ -22,6 +22,9 @@ export abstract class AReceptorBase extends Actor {
     this._currentColor = newColor;
     this.graphics.show(this._currentColor);
   }
+  protected changeColor(newColor: ReceptorColor){
+    this.currentColor = newColor;
+  }
 
   constructor(options: ReceptorOptions) {
     super({
@@ -32,7 +35,7 @@ export abstract class AReceptorBase extends Actor {
       anchor: options.anchor
     });
     this.pos = options.pos;
-    //TO-DO this._logicReceptor.addSubscriber(colorChanger());
+    this._logicReceptor.addSubscriber(this.changeColor); //! Is this working?
   }
 
   protected abstract changeColorEvent(e: GameEvent<ChangeColorEventParams>): void;
