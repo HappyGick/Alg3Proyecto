@@ -9,6 +9,7 @@ export class HexagonRegion implements RestrictionRegionGenerator<LogicReceptor<R
     //NOTE Hexagon begins at top-left corner with initialPos [0] and increments in clockwise fashion
     generateRegion(receptor: LogicReceptor<ReceptorColor, number>, currentPos: number, targetPos:number): LogicReceptor<ReceptorColor, number>[] {
         let currentRegion:Array<LogicReceptor<ReceptorColor,number>> = new Array<LogicReceptor<ReceptorColor,number>>();
+        let nextRegion:Array<LogicReceptor<ReceptorColor,number>> = new Array<LogicReceptor<ReceptorColor,number>>();
         let nextReceptor:LogicReceptor<ReceptorColor,number>|undefined;
         
         if(currentPos!=targetPos){
@@ -27,10 +28,13 @@ export class HexagonRegion implements RestrictionRegionGenerator<LogicReceptor<R
             }
 
             if(nextReceptor){
-                currentRegion = this.generateRegion(nextReceptor,currentPos,targetPos);
+                nextRegion = this.generateRegion(nextReceptor,currentPos,targetPos);
             }
         }
         currentRegion.push(receptor);
+        for(var e of nextRegion){
+            currentRegion.push(e);
+        }
 
         return currentRegion;
     }

@@ -8,14 +8,22 @@ import { RestrictionChecker } from "./restrictionchecker";
 export class InsertChecker extends RestrictionChecker< Array<LogicReceptor<ReceptorColor,number>>, LogicCompositePiece<ReceptorColor,number> > {
     check(toCheck: LogicCompositePiece<ReceptorColor, number>): boolean {
         let isValid:boolean = true;
-        for(var i=0;i<=5;i++){
-            if( (!this.element[i].isEmpty())&&(isValid) ){
-                this.setRestriction(new TryInsert(this.element[i].getPiece()));
-                isValid = super.check(toCheck);
+        for(var i=0; i<=5; i++){
+            if (toCheck.includesPiece(i)){
+                if (!this.element[i]){
+                    isValid = false;
+                    break;
+                } else {
+                    if( (!this.element[i].isEmpty())&&(isValid) ){
+                        this.setRestriction(new TryInsert(this.element[i].getPiece()));
+                        isValid = super.check(toCheck);
+                    }
+                }
             }
         }
         return isValid;
     }
+    
     tryInsert(composite: LogicCompositePiece<ReceptorColor,number>):boolean{
         let success:boolean = this.check(composite);
         if(success){

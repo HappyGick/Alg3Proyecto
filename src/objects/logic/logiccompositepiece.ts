@@ -25,6 +25,9 @@ export class LogicCompositePiece<P,I>{
     getPiece():P{
         return this.piece;
     }
+    includesPiece(index:I):boolean{
+        return this.composition.includes(index);
+    }
     updateObserver(){
         this.observer.update(this.piece);
     }
