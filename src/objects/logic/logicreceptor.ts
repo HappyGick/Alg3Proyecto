@@ -33,6 +33,9 @@ export class LogicReceptor<P,I>{
         this.piece = this.defaultPiece;
         this.updateObserver();
     }
+    isEmpty():boolean{
+        return this.piece === this.defaultPiece; //to-do Implement comparison method?
+    }
     updateObserver(){
         this.observer.update(this.piece);
     }

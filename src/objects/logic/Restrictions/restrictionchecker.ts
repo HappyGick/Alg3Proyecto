@@ -1,6 +1,9 @@
 export interface Restriction<E> {
     check(element:E):boolean;
 }
+export interface RestrictionRegionGenerator<E>{
+    generateRegion(element:E,step:number,targetInput:number):Array<E>; //? Any way to make this more flexible/generic?
+}
 
 export class RestrictionChecker<E,F>{
     element:E;
@@ -13,5 +16,13 @@ export class RestrictionChecker<E,F>{
 
     check(toCheck:F):boolean{
         return this.restriction.check(toCheck);
+    }
+    setRestriction(newRestriction:Restriction<F>){
+        this.restriction = newRestriction;
+    }
+
+    //TEST Create on-demand regions?
+    generateRegion(r:RestrictionRegionGenerator<E>,initialElement:E,initialPos:number,targetPos:number):Array<E>{
+        return r.generateRegion(initialElement,initialPos,targetPos);
     }
 }
