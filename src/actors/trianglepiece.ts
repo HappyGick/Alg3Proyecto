@@ -1,9 +1,10 @@
-import { Vector } from "excalibur";
+import { Actor, CollisionEndEvent, CollisionStartEvent, Vector } from "excalibur";
 import { CollisionHelper } from "../collisionhelper";
+import { EventHelper } from "../eventhelper";
 import { MathHelper } from "../mathhelper";
 import { APieceBase } from "../objects/abstract/base/piecebase";
 import { Images } from "../resources";
-import { PieceColor, ElementSpriteList } from "../types";
+import { PieceColor, ElementSpriteList, ChangeColorEventParams } from "../types";
 
 export class ATrianglePiece extends APieceBase {
   protected sprites: ElementSpriteList = {
@@ -32,8 +33,44 @@ export class ATrianglePiece extends APieceBase {
     this.rotation = this._rotation * Math.PI;
   }
 
-  setupEvents() {
-    // todos los eventos que necesites colócalos aquí
+  protected collisionEnterEvent(e: CollisionStartEvent<Actor>): void {
+    if (!this._isHead) return;
+    super.collisionEnterEvent(e);
+    if(this._collidingWith) {
+      // "Desconocemos" a lo que tocamos con este evento, así que toca usar
+      // el EventHelper para comunicarnos con el receptor
+      // Este evento sólo cambia el color del receptor
+      EventHelper.emitEvent<ChangeColorEventParams>(
+        'changecolor',
+        this._collidingWith,
+        {
+          color: this._currentColor,
+          rotation: this._rotation
+        }
+      );
+
+      // Pon el resto del código aquí
+    }
+  }
+
+  protected collisionLeaveEvent(e: CollisionEndEvent<Actor>): void {
+    if (!this._isHead) return;
+    if(this._collidingWith) {
+      // "Desconocemos" a lo que tocamos con este evento, así que toca usar
+      // el EventHelper para comunicarnos con el receptor
+      // Este evento sólo cambia el color del receptor
+      EventHelper.emitEvent<ChangeColorEventParams>(
+        'changecolor',
+        this._collidingWith,
+        {
+          color: "default",
+          rotation: this._rotation
+        }
+      );
+
+      // Pon el resto del código aquí
+    }
+    super.collisionLeaveEvent(e);
   }
 
   public onInitialize(): void {

@@ -1,4 +1,4 @@
-import { Actor, Collider, Vector } from "excalibur";
+import { Actor, Collider, CollisionEndEvent, CollisionStartEvent, Vector } from "excalibur";
 import { APieceHolder } from "../../../actors/pieceholder";
 import { CollisionHelper } from "../../../collisionhelper";
 import { PieceColor, ElementSpriteList } from "../../../types";
@@ -16,9 +16,10 @@ export abstract class APieceBase extends Actor {
   protected _currentColor: PieceColor;
   protected _originalPos: Vector;
   protected _holder?: APieceHolder<this>; // importante para la colaboración
+  protected _isHead: boolean = false;
+  protected _collidingWith?: Actor;
   
   protected abstract readonly sprites: ElementSpriteList;
-  protected abstract setupEvents(): void;
 
   constructor(options: PieceOptions) {
     super({
@@ -39,8 +40,24 @@ export abstract class APieceBase extends Actor {
     }
   }
 
+  protected collisionEnterEvent(e: CollisionStartEvent<Actor>) {
+    if (!this._collidingWith) this._collidingWith = e.other;
+  }
+  protected collisionLeaveEvent(e: CollisionEndEvent<Actor>) {
+    this._collidingWith = undefined;
+  }
+
+  protected setupEvents() {
+    this.on('collisionend', this.collisionLeaveEvent.bind(this));
+    this.on('collisionstart', this.collisionEnterEvent.bind(this))
+  }
+
   public resetPosition() {
     this.pos = this._originalPos;
+  }
+
+  public toggleHead() {
+    this._isHead = !this._isHead;
   }
 
   public set holder(h: APieceHolder<this>) {

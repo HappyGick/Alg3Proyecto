@@ -12,8 +12,8 @@ export class CollisionHelper {
      * Collider con forma de triángulo equilátero.
      */
     public static TriangleCollider(): PolygonCollider {
-        const halfHeight = MathHelper.triangleHeight / 2;
-        const sideHalf = MathHelper.triangleSideLength / 2;
+        const halfHeight = (MathHelper.triangleHeight / 3) / 2;
+        const sideHalf = (MathHelper.triangleSideLength / 3) / 2;
         return Shape.Polygon([vec(sideHalf, sideHalf), vec(0, -halfHeight), vec(-sideHalf, sideHalf)]);
     }
 }

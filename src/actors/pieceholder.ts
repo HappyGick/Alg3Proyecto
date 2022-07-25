@@ -21,6 +21,7 @@ export class APieceHolder<T extends APieceBase> extends Actor {
         this._originalPos = position;
         this._pieces = pieces;
         this._headPiece = headPiece;
+        this._headPiece.toggleHead();
 
         for(let p of pieces) {
             p.holder = this;
