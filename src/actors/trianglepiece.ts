@@ -34,7 +34,7 @@ export class ATrianglePiece extends APieceBase {
   }
 
   protected collisionEnterEvent(e: CollisionStartEvent<Actor>): void {
-    if (!this._isHead) return;
+    if (!this._isHead) return; //! El profesor pidio evitar este tipo de declaraciones
     super.collisionEnterEvent(e);
     if(this._collidingWith) {
       // "Desconocemos" a lo que tocamos con este evento, así que toca usar
