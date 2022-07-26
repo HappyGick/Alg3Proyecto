@@ -3,6 +3,7 @@ import { EventHelper } from "./eventhelper";
 import { TemplateManagers } from "./templatemanagers";
 import { Images } from "./resources";
 import { Scenes } from './scenes';
+import { SceneHelper } from "./scenehelper";
 
 class Game extends Engine {
 
@@ -35,6 +36,7 @@ class Game extends Engine {
 
   initialize() {
     
+    SceneHelper.initialize(this);
     this.initializeTemplateManagers();
     this.addImages();
     this.addScenes();
@@ -42,7 +44,7 @@ class Game extends Engine {
     const loader = new Loader(this.loadableRes);
     this.start(loader).then(() => {
       EventHelper.initializePointerReference(this.input.pointers.primary);
-      this.goToScene('gameScene');
+      this.goToScene('mainMenu');
     });
     
   }

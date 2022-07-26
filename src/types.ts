@@ -1,4 +1,5 @@
 import { Sprite, Vector } from "excalibur";
+import { PointerEvent } from "excalibur/build/dist/Input/PointerEvent";
 
 export type PieceColor = "red" | "green" | "blue" | "purple" | "yellow";
 export type PieceRotation = 0 | 1;
@@ -26,3 +27,5 @@ export type TrianglePieceTemplate = {
 }
 
 export type ElementSpriteList = {[color: string]: Sprite}
+
+export type OnClickFunction = (e: PointerEvent) => void;
