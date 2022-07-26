@@ -1,5 +1,6 @@
 import { ReceptorColor } from "../../../types";
 import { LogicReceptor} from "../logicreceptor";
+import { Neighborhood } from "../neighborhood";
 import { RestrictionRegionGenerator } from "./restrictionchecker";
 
 /**
@@ -7,8 +8,8 @@ import { RestrictionRegionGenerator } from "./restrictionchecker";
  */
 export class HexagonRegion implements RestrictionRegionGenerator<LogicReceptor<ReceptorColor,number>>{
     //NOTE Hexagon top-row has index [0,1,2] left-to-right, and bottom-row has [3,4,5]
-    generateRegion(receptor: LogicReceptor<ReceptorColor, number>, initialPos:number): LogicReceptor<ReceptorColor, number>[] {
-        let hexagon:Array<LogicReceptor<ReceptorColor,number>> = new Array<LogicReceptor<ReceptorColor,number>>;
+    generateRegion(receptor: LogicReceptor<ReceptorColor, number>, initialPos:number): Neighborhood<number,LogicReceptor<ReceptorColor,number>> {
+        let hexagon:Neighborhood<number,LogicReceptor<ReceptorColor,number>> = new Neighborhood<number,LogicReceptor<ReceptorColor,number>>();
         if(initialPos!=0){
             let nextReceptor:LogicReceptor<ReceptorColor,number>|undefined 
             if(initialPos != 3){
@@ -23,10 +24,11 @@ export class HexagonRegion implements RestrictionRegionGenerator<LogicReceptor<R
         }
         return hexagon;
     }
-    constructHexagon(receptor:LogicReceptor<ReceptorColor,number>):Array<LogicReceptor<ReceptorColor,number>>{
+    constructHexagon(receptor:LogicReceptor<ReceptorColor,number>):Neighborhood<number,LogicReceptor<ReceptorColor,number>>{
         let verticalNeighbor:LogicReceptor<ReceptorColor,number>|undefined;
         let upperRow:Array<LogicReceptor<ReceptorColor,number>>;
         let lowerRow:Array<LogicReceptor<ReceptorColor,number>> = new Array<LogicReceptor<ReceptorColor,number>>;
+        let hexagon:Neighborhood<number,LogicReceptor<ReceptorColor,number>> = new Neighborhood<number,LogicReceptor<ReceptorColor,number>>();
 
         verticalNeighbor = this.shiftRow(receptor);
         upperRow = this.constructRow(receptor,0,2,false);
@@ -36,7 +38,18 @@ export class HexagonRegion implements RestrictionRegionGenerator<LogicReceptor<R
         } else {
             lowerRow = this.constructRow(verticalNeighbor,0,2,true);
         }
-        return upperRow.concat(lowerRow);
+
+        let i:number = 0;
+        for(var e of upperRow){
+            hexagon.add(i,e);
+            i++;
+        }
+        i=3; //Lower row starts at '3' (upperRow max elements + 1) independently of how long the upper row was
+        for(var e of lowerRow){
+            hexagon.add(i,e);
+            i++;
+        }
+        return hexagon;
     }
     shiftRow(receptor: LogicReceptor<ReceptorColor,number>):LogicReceptor<ReceptorColor,number>|undefined{
         return receptor.getNeighbor(0);
