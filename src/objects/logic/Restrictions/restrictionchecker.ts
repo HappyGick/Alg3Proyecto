@@ -2,7 +2,7 @@ export interface Restriction<E> {
     check(element:E):boolean;
 }
 export interface RestrictionRegionGenerator<E>{
-    generateRegion(element:E,step:number,targetInput:number):Array<E>; //? Any way to make this more flexible/generic?
+    generateRegion(element:E,initialInput:number):Array<E>; //? Any way to make this more flexible/generic?
 }
 
 export class RestrictionChecker<E,F>{
@@ -22,7 +22,7 @@ export class RestrictionChecker<E,F>{
     }
 
     //TEST Create on-demand regions?
-    generateRegion(r:RestrictionRegionGenerator<E>,initialElement:E,initialPos:number,targetPos:number):Array<E>{
-        return r.generateRegion(initialElement,initialPos,targetPos);
+    generateRegion(r:RestrictionRegionGenerator<E>,initialElement:E,initialPos:number):Array<E>{
+        return r.generateRegion(initialElement,initialPos);
     }
 }
