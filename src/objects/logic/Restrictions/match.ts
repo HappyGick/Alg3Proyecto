@@ -11,11 +11,14 @@ export class TryMatch implements Restriction< Neighborhood<number,LogicReceptor<
             if(nextReceptor){hexagon.push(nextReceptor);}
         }
         let isMatch = true;
-        let matchColor:ReceptorColor = hexagon[0].getPiece();
-        for(var e of hexagon){
-            if(e.getPiece() != matchColor) {
-                isMatch = false;
-                break;
+        if( (hexagon.length < 6)||(hexagon[0].isEmpty()) ){isMatch = false}
+        if(isMatch){
+            let matchColor:ReceptorColor = hexagon[0].getPiece();
+            for(var e of hexagon){
+                if(e.getPiece() != matchColor) {
+                    isMatch = false;
+                    break;
+                }
             }
         }
         return isMatch;

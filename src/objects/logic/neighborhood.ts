@@ -13,4 +13,7 @@ export class Neighborhood<I,E>{
     includes(index:I):boolean{
         return this.maping.has(index);
     }
+    getSize():number{
+        return this.maping.size;
+    }
 }

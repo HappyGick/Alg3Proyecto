@@ -3,6 +3,7 @@ import { CollisionHelper } from "../collisionhelper";
 import { EventHelper } from "../eventhelper";
 import { MathHelper } from "../mathhelper";
 import { APieceBase } from "../objects/abstract/base/piecebase";
+import { GameSystem } from "../objects/system";
 import { Images } from "../resources";
 import { PieceColor, ElementSpriteList, ChangeColorEventParams } from "../types";
 
@@ -50,6 +51,11 @@ export class ATrianglePiece extends APieceBase {
       );
 
       // Pon el resto del código aquí
+      EventHelper.emitEvent<void>(
+        'updatesystemreceptor',
+        this._collidingWith,
+        undefined //! Is this okay?? What variable should go here??
+      );
     }
   }
 
@@ -69,6 +75,7 @@ export class ATrianglePiece extends APieceBase {
       );
 
       // Pon el resto del código aquí
+      GameSystem.deleteInsertReceptor();
     }
     super.collisionLeaveEvent(e);
   }

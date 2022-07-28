@@ -1,9 +1,12 @@
 export class Score {
-    static currentScore:number;
+    currentScore:number;
+    constructor(){
+        this.currentScore = 0;
+    }
     //! Temporary solution, needs proper Math function
-    static addScore(n:number){
-        Score.currentScore += n + Score.currentScore*0.1;
+    addScore(n:number){
+        this.currentScore += n + Math.floor(this.currentScore*0.1);
         //TEST Every time score is added, send console log
-            console.log(Score.currentScore);
+            console.log(this.currentScore);
     }
 }

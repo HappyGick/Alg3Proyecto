@@ -23,7 +23,8 @@ export type PartialTemplate = {
 
 export type TrianglePieceTemplate = {
     points: Vector[],
-    headPiece: number
+    headPiece: number,
+    originalTemplate:PartialTemplate
 }
 
 export type ElementSpriteList = {[color: string]: Sprite}

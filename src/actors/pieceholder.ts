@@ -3,14 +3,20 @@ import { CollisionHelper } from "../collisionhelper";
 import { PointerEvent } from "excalibur/build/dist/Input/PointerEvent";
 import { EventHelper } from "../eventhelper";
 import { APieceBase } from "../objects/abstract/base/piecebase";
+import { PartialTemplate, ReceptorColor } from "../types";
+import { LogicCompositePiece } from "../objects/logic/logiccompositepiece";
+import { Neighborhood } from "../objects/logic/neighborhood";
+import { GameSystem } from "../objects/system";
 
 export class APieceHolder<T extends APieceBase> extends Actor {
     private _originalPos: Vector;
     private _pieces: T[];
     private _headPiece: T; // cabeza
     private followMouseHandler?: (event: PointerEvent) => void;
+    //TEST Piece holders have composite pieces inside?
+    private _logicComposite: LogicCompositePiece<ReceptorColor,number>;
 
-    constructor(position: Vector, pieces: T[], headPiece: T) {
+    constructor(position: Vector, pieces: T[], headPiece: T, template : PartialTemplate, color:ReceptorColor) {
         super({
             pos: position,
             width: 130,
@@ -26,6 +32,9 @@ export class APieceHolder<T extends APieceBase> extends Actor {
         for(let p of pieces) {
             p.holder = this;
         }
+
+        this._logicComposite = new LogicCompositePiece<ReceptorColor,number>(color,color,new Neighborhood<number,ReceptorColor>(),0);
+        this._logicComposite.loadTemplate(template,function(x:number):number{return x})
     }
 
     dragMoveEvent(e: PointerEvent) {
@@ -43,6 +52,9 @@ export class APieceHolder<T extends APieceBase> extends Actor {
         for(let piece of this._pieces) {
             piece.resetPosition();
         }
+
+        //TEST Insertion via static method
+            GameSystem.tryInsert(this._logicComposite);
     }
 
     dragEnterEvent() {

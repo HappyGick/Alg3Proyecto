@@ -22,7 +22,7 @@ export abstract class AReceptorBase extends Actor {
     this._currentColor = newColor;
     this.graphics.show(this._currentColor);
   }
-  protected changeColor(newColor: ReceptorColor){
+  protected changeColor(newColor: ReceptorColor):void {
     this.currentColor = newColor;
   }
 
@@ -35,12 +35,14 @@ export abstract class AReceptorBase extends Actor {
       anchor: options.anchor
     });
     this.pos = options.pos;
-    this._logicReceptor.addSubscriber(this.changeColor); //! Is this working?
+    this._logicReceptor.addSubscriber(this.changeColor.bind(this));
   }
 
   protected abstract changeColorEvent(e: GameEvent<ChangeColorEventParams>): void;
 
   protected abstract setColorEvent(e: GameEvent<SetColorEventParams>): void;
+
+  protected abstract updateSystemReceptorEvent():void;
 
   protected setupEvents() {
     // Estos dos son eventos para los receptores, si tu método
@@ -49,6 +51,7 @@ export abstract class AReceptorBase extends Actor {
     // para activar estos eventos
     this.events.on('changecolor', this.changeColorEvent.bind(this));
     this.events.on('setcolor', this.setColorEvent.bind(this));
+    this.events.on('updatesystemreceptor',this.updateSystemReceptorEvent.bind(this));
   }
 
   protected addGraphics() {
@@ -74,5 +77,9 @@ export abstract class AReceptorBase extends Actor {
   }
   getNeighbor(index:number):LogicReceptor<ReceptorColor,number>|undefined{
     return this._logicReceptor.getNeighbor(index);
+  }
+  //Status-related
+  isEmpty():boolean{
+    return this._logicReceptor.isEmpty(); //to-do Create comparison algorhythm?
   }
 }

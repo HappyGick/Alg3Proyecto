@@ -18,7 +18,7 @@ export class TriangleTemplateManager extends PieceTemplateManagerBase<TrianglePi
                 }
             }
 
-            this.templates.push({ points: p, headPiece: head});
+            this.templates.push({ points: p, headPiece: head, originalTemplate:t});
         }
     }
 }

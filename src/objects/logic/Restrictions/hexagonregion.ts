@@ -24,7 +24,7 @@ export class HexagonRegion implements RestrictionRegionGenerator<LogicReceptor<R
         }
         return hexagon;
     }
-    constructHexagon(receptor:LogicReceptor<ReceptorColor,number>):Neighborhood<number,LogicReceptor<ReceptorColor,number>>{
+    private constructHexagon(receptor:LogicReceptor<ReceptorColor,number>):Neighborhood<number,LogicReceptor<ReceptorColor,number>>{
         let verticalNeighbor:LogicReceptor<ReceptorColor,number>|undefined;
         let upperRow:Array<LogicReceptor<ReceptorColor,number>>;
         let lowerRow:Array<LogicReceptor<ReceptorColor,number>> = new Array<LogicReceptor<ReceptorColor,number>>;
@@ -33,10 +33,10 @@ export class HexagonRegion implements RestrictionRegionGenerator<LogicReceptor<R
         verticalNeighbor = this.shiftRow(receptor);
         upperRow = this.constructRow(receptor,0,2,false);
         if(!verticalNeighbor){
-            verticalNeighbor = this.shiftRow(upperRow[2]);
+            if(upperRow[2]){verticalNeighbor = this.shiftRow(upperRow[2]);}
             if(verticalNeighbor){lowerRow = this.constructRow(verticalNeighbor,0,2,true);}
         } else {
-            lowerRow = this.constructRow(verticalNeighbor,0,2,true);
+            lowerRow = this.constructRow(verticalNeighbor,0,2,false);
         }
 
         let i:number = 0;
@@ -51,10 +51,10 @@ export class HexagonRegion implements RestrictionRegionGenerator<LogicReceptor<R
         }
         return hexagon;
     }
-    shiftRow(receptor: LogicReceptor<ReceptorColor,number>):LogicReceptor<ReceptorColor,number>|undefined{
+    private shiftRow(receptor: LogicReceptor<ReceptorColor,number>):LogicReceptor<ReceptorColor,number>|undefined{
         return receptor.getNeighbor(0);
     }
-    constructRow(receptor: LogicReceptor<ReceptorColor,number>,currentPos:number,targetPos:number,isInverted:boolean): LogicReceptor<ReceptorColor, number>[] {
+    private constructRow(receptor: LogicReceptor<ReceptorColor,number>,currentPos:number,targetPos:number,isInverted:boolean): LogicReceptor<ReceptorColor, number>[] {
         let direction:number = 1;
         if(isInverted){direction *= -1}
         let currentRow:Array<LogicReceptor<ReceptorColor,number>> = new Array<LogicReceptor<ReceptorColor,number>>();
