@@ -2,14 +2,14 @@ import { ReceptorColor } from "../../../types";
 import { LogicCompositePiece } from "../logiccompositepiece";
 import { LogicReceptor } from "../logicreceptor";
 import { Neighborhood } from "../neighborhood";
-import { TryInsert } from "./insert";
+//import { TryInsert } from "./insert"; //to-do Rework condition use. Should use a restriction. Not using it since it was wrongly implemented
 import { RestrictionChecker } from "./restrictionchecker";
 
 export class InsertChecker extends RestrictionChecker< Neighborhood<number,LogicReceptor<ReceptorColor,number>>, LogicCompositePiece<ReceptorColor,number> > {
     check(toCheck: LogicCompositePiece<ReceptorColor, number>): boolean {
         let isValid:boolean = true;
         for(var i=0; i<=5; i++){
-            if (toCheck.includesPiece(i)){ //to-do Rework condition use. Should use a restriction. Not using it since it was wrongly implemented
+            if (toCheck.includesPiece(i)){ 
                 let receptor:LogicReceptor<ReceptorColor,number>|undefined = this.element.get(i);
                 if (!receptor){
                     isValid = false;
