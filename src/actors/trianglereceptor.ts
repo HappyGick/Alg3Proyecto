@@ -4,7 +4,7 @@ import { MathHelper } from "../mathhelper";
 import { AReceptorBase } from "../objects/abstract/base/receptorbase";
 import { GameSystem } from "../objects/system";
 import { Images } from "../resources";
-import { ChangeColorEventParams, ElementSpriteList, SetColorEventParams } from "../types";
+import { ChangeColorEventParams, ElementSpriteList, ReceptorColor, SetColorEventParams } from "../types";
 
 export class ATriangleReceptor extends AReceptorBase {
   protected readonly sprites: ElementSpriteList = {
@@ -16,6 +16,10 @@ export class ATriangleReceptor extends AReceptorBase {
     purple: Images.PurpleTriangle.toSprite()
   };
   private _rotation: number;
+  protected setColor(newColor: ReceptorColor): void {
+    super.setColor(newColor);
+    this.graphics.opacity = 1;
+  }
 
   constructor(position: Vector, rotation: number) {
     super({
