@@ -16,8 +16,8 @@ export class ATriangleReceptor extends AReceptorBase {
     purple: Images.PurpleTriangle.toSprite()
   };
   private _rotation: number;
-  protected setColor(newColor: ReceptorColor): void {
-    super.setColor(newColor);
+  protected changeColor(newColor: ReceptorColor): void {
+    super.changeColor(newColor);
     this.graphics.opacity = 1;
   }
 
