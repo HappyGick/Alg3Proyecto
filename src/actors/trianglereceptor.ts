@@ -33,7 +33,7 @@ export class ATriangleReceptor extends AReceptorBase {
   }
 
   protected changeColorEvent(e: GameEvent<ChangeColorEventParams>) {
-    if ( (this._rotation !== e.other!.rotation)||(!this.isEmpty()) )return; //! Se pidio evitar este tipo de instrucciones
+    if ( (this._rotation !== e.other!.rotation)||(!this.isEmpty()) )return;
     this.currentColor = e.other!.color;
     if (e.other!.color !== 'default') this.graphics.opacity = 0.5;
     else this.graphics.opacity = 1;
@@ -51,8 +51,6 @@ export class ATriangleReceptor extends AReceptorBase {
 
   protected updateSystemReceptorEvent(){
     GameSystem.setInsertReceptor(this._logicReceptor);
-    //TEST Update system receptor?
-      console.log("Graphic Receptor: Game System updated");
   }
 
   private rotatePiece() {

@@ -12,10 +12,13 @@ export class Score implements ITextReactor<number> {
         this.currentScore.subscribe(callback);
     }
 
-    //! Temporary solution, needs proper Math function
+    //to-do Temporary solution, needs proper Math function
     public addScore(n:number){
         let score = this.currentScore.value;
         score += n;
         this.currentScore.update(score);
+    }
+    public reset(){
+        this.currentScore.update(0);
     }
 }

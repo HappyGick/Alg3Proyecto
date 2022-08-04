@@ -16,8 +16,6 @@ export class InsertChecker extends RestrictionChecker< Neighborhood<number,Logic
                     break;
                 } else {
                     if(!receptor.isEmpty()){
-                        //TEST
-                            console.log("Found full receptor! At ",i);
                         isValid = false;
                         break;
                     }

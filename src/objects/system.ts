@@ -55,26 +55,25 @@ export class GameSystem {
         if(GameSystem.insertReceptor){
             let hexagon:Neighborhood<number,LogicReceptor<ReceptorColor,number>> = this.regionGenerator.generateRegion(GameSystem.insertReceptor,composite.getHeadPos());
             let insertLogic:InsertChecker = new InsertChecker(hexagon,new TryInsert(GameSystem.insertReceptor.getPiece()));
-            //TEST We cryy
-                console.log("Insert trial");
             success = insertLogic.tryInsert(composite);
             if(success){
                 GameSystem.scorer.addScore(10);
                 for(let i=0;i<=5;i++){
                     let receptor:LogicReceptor<ReceptorColor,number>|undefined = hexagon.get(i);
                     if(receptor){
-                        //TEST We suffer
-                            console.log("Now trying to match at... ",i);
                         GameSystem.setInsertReceptor(receptor);
                         GameSystem.tryMatch();
                     }
                 }
+                //After trying match, is game over?
+                let emptySequence:[number,boolean] = GameSystem.insertReceptor.countEmpty(new Set<LogicReceptor<ReceptorColor,number>>());
+                if(emptySequence[0] < 6){GameSystem.gameOver();}
             }
             //to-do Not take into consideration repeated hexagons, yet provide chances for all inserted pieces to form hexagons (i.e. erase inserted pieces at last)
-            //to-do On successful insert, kill PieceHolders and create new pieces
         }
         return success;
     }
+
     static tryMatch(){
         if(GameSystem.insertReceptor){
             let totalMatches:Set<number> = new Set<number>();
@@ -88,13 +87,18 @@ export class GameSystem {
                 }
             }
             for(var i of totalMatches){
-                //TEST
-                    console.log("Match found! At ",i);
-                GameSystem.scorer.addScore(200 + 100*i); //! Temporary solution
+                GameSystem.scorer.addScore(200 + 100*i);
                 let hexagon:Neighborhood<number,LogicReceptor<ReceptorColor,number>> = this.regionGenerator.generateRegion(GameSystem.insertReceptor,i)
                 let matchLogic:MatchChecker = new MatchChecker(hexagon,new TryMatch());
                 matchLogic.updateRegion();
             }
         }
+    }
+
+    static gameOver(){
+        //Print a game over message over console, just in case
+            console.log("Game over!");
+        if(GameSystem.insertReceptor){GameSystem.insertReceptor.cleanAll(new Set<LogicReceptor<ReceptorColor,number>>());}
+        GameSystem.scorer.reset();
     }
 }

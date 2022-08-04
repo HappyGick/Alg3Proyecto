@@ -14,7 +14,6 @@ export class APieceHolder<T extends APieceBase> extends Actor {
     private _pieces: T[];
     private _headPiece: T; // cabeza
     private followMouseHandler?: (event: PointerEvent) => void;
-    //TEST Piece holders have composite pieces inside?
     private _logicComposite: LogicCompositePiece<PieceColor,number>;
     private _template: PartialTemplate;
     private _pieceColor: PieceColor;
@@ -94,7 +93,7 @@ export class APieceHolder<T extends APieceBase> extends Actor {
             piece.resetPosition();
         }
 
-        //TEST Insertion via static method
+        //to-do Should be an instance + observers. Should avoid statics
         if (GameSystem.tryInsert(this._logicComposite)) {
             this.replace();
         }

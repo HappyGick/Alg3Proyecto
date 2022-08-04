@@ -46,4 +46,36 @@ export class LogicReceptor<P,I>{
     addSubscriber(newSubscriber:ObserverCallback<P>){
         this.observer.subscribe(newSubscriber);
     }
+
+    countEmpty(seen:Set<LogicReceptor<P,I>>):[number,boolean]{
+        let total:[number,boolean] = [0,this.isEmpty()];
+        let bestRoute:[number,boolean] = [0,false];
+        let currentRoute:[number,boolean] = [0,false];
+        seen.add(this);
+        for(var n of this.neighbors){
+            if(!seen.has(n)){
+                currentRoute = n.countEmpty(seen);
+                if(currentRoute > bestRoute){bestRoute = currentRoute;}
+            }
+        }
+        if(this.isEmpty()){
+            total[0]++;
+        }
+        if(bestRoute[1]){
+            total[0] += bestRoute[0];
+        } else {
+            total[0] = bestRoute[0];
+        }
+
+        return total;
+    }
+    cleanAll(seen:Set<LogicReceptor<P,I>>):void{
+        this.clean();
+        seen.add(this);
+        for(var n of this.neighbors){
+            if(!seen.has(n)){
+                n.cleanAll(seen);
+            }
+        }
+    }
 }

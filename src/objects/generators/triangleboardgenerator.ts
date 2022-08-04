@@ -10,7 +10,6 @@ export class TriangleBoardGenerator extends HexagonGenerator {
         let previousReceptor:ATriangleReceptor;
         let currentRow:Array<ATriangleReceptor>;
         let currentReceptor:ATriangleReceptor;
-        //to-do add matchChecker someplace here
         
         currentRow = new Array<ATriangleReceptor>();
         for(let i = 0; i < this._layers * 2; i++) {

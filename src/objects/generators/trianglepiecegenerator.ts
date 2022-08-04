@@ -41,7 +41,7 @@ export class TrianglePieceGenerator extends HexagonGenerator {
         }
 
         let p = new APieceHolder<ATrianglePiece>(vec(at.x + MathHelper.triangleHeight, at.y + 65), pieces, head, this._template.originalTemplate, this._color);
-        this._scene.add(p); //TEST Do APieceHolder now work as intended??? //? Violates Demeter Law
+        this._scene.add(p);
         return p;
     }
 }

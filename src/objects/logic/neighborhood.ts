@@ -16,4 +16,7 @@ export class Neighborhood<I,E>{
     getSize():number{
         return this.maping.size;
     }
+    [Symbol.iterator](){
+        return this.maping.values();
+    }
 }

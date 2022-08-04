@@ -35,7 +35,7 @@ export class ATrianglePiece extends APieceBase {
   }
 
   protected collisionEnterEvent(e: CollisionStartEvent<Actor>): void {
-    if (!this._isHead) return; //! El profesor pidio evitar este tipo de declaraciones
+    if (!this._isHead) return;
     super.collisionEnterEvent(e);
     if(this._collidingWith) {
       // "Desconocemos" a lo que tocamos con este evento, así que toca usar
@@ -54,7 +54,7 @@ export class ATrianglePiece extends APieceBase {
       EventHelper.emitEvent<void>(
         'updatesystemreceptor',
         this._collidingWith,
-        undefined //! Is this okay?? What variable should go here??
+        undefined
       );
     }
   }
