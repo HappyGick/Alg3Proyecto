@@ -48,13 +48,13 @@ export class GameSystem {
     }
     static tryMatch(){
         if(GameSystem.insertReceptor){
-            let totalMatches:Array<number> = new Array<number>();
+            let totalMatches:Set<number> = new Set<number>();
             for(let i=0;i<=5;i++){
                 let hexagon:Neighborhood<number,LogicReceptor<ReceptorColor,number>> = this.regionGenerator.generateRegion(GameSystem.insertReceptor,i)
-                if(hexagon.getSize() === 6) {
+                if( (hexagon.getSize() === 6)&&(!totalMatches.has(i-3)) ) {
                     let matchLogic:MatchChecker = new MatchChecker(hexagon,new TryMatch());
                     if(matchLogic.check(hexagon)){
-                        totalMatches.push(i);
+                        totalMatches.add(i);
                     }
                 }
             }
