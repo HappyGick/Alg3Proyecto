@@ -1,13 +1,6 @@
 [
     {
         "cells": [
-            true, true, true,
-            true, true, true
-        ],
-        "head": 1
-    },
-    {
-        "cells": [
             true, false, true,
             true, true, true
         ],
