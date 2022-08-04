@@ -1,6 +1,7 @@
 import { Color, Engine, Scene, vec } from "excalibur";
 import { TriangleBoardGenerator } from "../objects/generators/triangleboardgenerator";
 import { TrianglePieceGenerator } from "../objects/generators/trianglepiecegenerator";
+import { TrianglePieceManager } from "../objects/trianglepiecemanager";
 import { UIBuilder } from "../objects/util/uibuilder";
 import { Images } from "../resources";
 import { SceneHelper } from "../scenehelper";
@@ -43,12 +44,9 @@ export class GameScene extends Scene {
 
         let gen = new TriangleBoardGenerator(3);
         gen.generate(vec(380, 90), this);
-        let piecegen = new TrianglePieceGenerator(TemplateManagers.triangle.templates[0], 'green');
-        piecegen.generate(vec(900, 90), this);
-        piecegen.reset(TemplateManagers.triangle.templates[2], 'red');
-        piecegen.generate(vec(900, 250), this);
-        piecegen.reset(TemplateManagers.triangle.templates[3], 'purple');
-        piecegen.generate(vec(900, 400), this);
+        let piecegen = new TrianglePieceGenerator(TemplateManagers.triangle.templates[0], 'green', this);
+        let pieceman = new TrianglePieceManager(piecegen);
+        pieceman.generatePieces();
     }
 
     public onInitialize(_engine: Engine): void {

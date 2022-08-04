@@ -1,4 +1,4 @@
-import { ReceptorColor } from "../types";
+import { PieceColor, ReceptorColor } from "../types";
 import { LogicCompositePiece } from "./logic/logiccompositepiece";
 import { LogicReceptor } from "./logic/logicreceptor";
 import { Neighborhood } from "./logic/neighborhood";
@@ -21,13 +21,14 @@ export class GameSystem {
         GameSystem.insertReceptor = undefined;
     }
 
-    static tryInsert(composite:LogicCompositePiece<ReceptorColor,number>){
+    static tryInsert(composite:LogicCompositePiece<PieceColor,number>){
+        let success: boolean = false;
         if(GameSystem.insertReceptor){
             let hexagon:Neighborhood<number,LogicReceptor<ReceptorColor,number>> = this.regionGenerator.generateRegion(GameSystem.insertReceptor,composite.getHeadPos());
             let insertLogic:InsertChecker = new InsertChecker(hexagon,new TryInsert(GameSystem.insertReceptor.getPiece()));
             //TEST We cryy
                 console.log("Insert trial");
-            let success:boolean = insertLogic.tryInsert(composite);
+            success = insertLogic.tryInsert(composite);
             if(success){
                 GameSystem.scorer.addScore(10);
                 for(let i=0;i<=5;i++){
@@ -43,6 +44,7 @@ export class GameSystem {
             //to-do Not take into consideration repeated hexagons, yet provide chances for all inserted pieces to form hexagons (i.e. erase inserted pieces at last)
             //to-do On successful insert, kill PieceHolders and create new pieces
         }
+        return success;
     }
     static tryMatch(){
         if(GameSystem.insertReceptor){

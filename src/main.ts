@@ -1,4 +1,4 @@
-import { DisplayMode, Engine, Loadable, Loader, Vector } from "excalibur";
+import { Color, DisplayMode, Engine, Loadable, Loader, Vector } from "excalibur";
 import { EventHelper } from "./eventhelper";
 import { TemplateManagers } from "./templatemanagers";
 import { Images } from "./resources";
@@ -12,7 +12,8 @@ class Game extends Engine {
 
   constructor() {
     super({
-      displayMode: DisplayMode.FillScreen
+      displayMode: DisplayMode.FillScreen,
+      backgroundColor: new Color(10, 1, 33, 255)
     });
   }
 

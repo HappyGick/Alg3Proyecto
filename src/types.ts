@@ -30,3 +30,5 @@ export type TrianglePieceTemplate = {
 export type ElementSpriteList = {[color: string]: Sprite}
 
 export type OnClickFunction = (e: PointerEvent) => void;
+
+export type RotatePieceCallback = (t: PartialTemplate, c: PieceColor) => void;
