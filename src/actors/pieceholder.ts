@@ -7,6 +7,7 @@ import { PartialTemplate, PieceColor, RotatePieceCallback } from "../types";
 import { LogicCompositePiece } from "../objects/logic/logiccompositepiece";
 import { Neighborhood } from "../objects/logic/neighborhood";
 import { GameSystem } from "../objects/system";
+import { Box } from "../objects/box";
 
 export class APieceHolder<T extends APieceBase> extends Actor {
     private _originalPos: Vector;
@@ -59,14 +60,16 @@ export class APieceHolder<T extends APieceBase> extends Actor {
         }
     }
 
-    private replace() {
+    public replace() {
         this._replace();
         this.killEverything();
     }
 
     onClickEvent() {
-        this.rotateRequestCallback(this._template, this._pieceColor);
-        this.killEverything();
+        if (!GameSystem.usePowerUp('piece', new Box(this))) {
+            this.rotateRequestCallback(this._template, this._pieceColor);
+            this.killEverything();
+        }
     }
 
     pointerUpEvent() {

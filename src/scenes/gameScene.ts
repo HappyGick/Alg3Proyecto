@@ -1,6 +1,9 @@
 import { Color, Engine, Scene, vec } from "excalibur";
 import { TriangleBoardGenerator } from "../objects/generators/triangleboardgenerator";
 import { TrianglePieceGenerator } from "../objects/generators/trianglepiecegenerator";
+import { HammerPowerUp } from "../objects/hammerpowerup";
+import { GameSystem } from "../objects/system";
+import { TrashPowerUp } from "../objects/trashpowerup";
 import { TrianglePieceManager } from "../objects/trianglepiecemanager";
 import { UIBuilder } from "../objects/util/uibuilder";
 import { Images } from "../resources";
@@ -31,16 +34,25 @@ export class GameScene extends Scene {
                 vec(SceneHelper.screenWidth - 75, SceneHelper.screenHeight - 75),
                 75,
                 Images.HammerIcon.toSprite()
-            )
+            ),
+            () => {
+                GameSystem.setPowerUp(new HammerPowerUp());
+            }
         );
         builder.placeButton(
             new UIIconButton(
                 vec(SceneHelper.screenWidth - 175, SceneHelper.screenHeight - 75),
                 75,
                 Images.TrashIcon.toSprite()
-            )
+            ),
+            () => {
+                GameSystem.setPowerUp(new TrashPowerUp());
+            }
         )
-        builder.placeLabel("Score: 696969", 125, 50, 32, Color.White);
+        let scoreLabel = builder.placeLabel("Score: 0", 125, 50, 32, Color.White);
+        GameSystem.bindScore(scoreLabel);
+        let poweruplabel = builder.placeLabel("Power up: None", 175, SceneHelper.screenHeight - 50, 32, Color.White);
+        GameSystem.bindPowerUpName(poweruplabel);
 
         let gen = new TriangleBoardGenerator(3);
         gen.generate(vec(380, 90), this);

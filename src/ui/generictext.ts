@@ -1,4 +1,6 @@
 import { Color, Vector, Font, Actor, ActorArgs, Text, vec } from "excalibur";
+import { Observer } from "../objects/observer";
+import { ITextReactor } from "../types";
 
 export interface TextOptions {
   text?: string;
@@ -52,5 +54,13 @@ export class UIGenericText extends Actor {
 
   public getTextHeight(): number {
     return this._text.height;
+  }
+
+  public bindTextTo(text: string, reactor: ITextReactor<any>) {
+    reactor.watch(((value: any) => { this.text = text.replace(/\[val\]/g, "" + value) }).bind(this));
+  }
+
+  public bindTextOn(text: string, observer: Observer<any>) {
+    observer.subscribe(((value: any) => { this.text = text.replace(/\[val\]/g, "" + value) }).bind(this));
   }
 }

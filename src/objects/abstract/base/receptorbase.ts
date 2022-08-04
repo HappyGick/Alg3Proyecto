@@ -1,8 +1,10 @@
 import { Actor, Collider, GameEvent, Vector } from "excalibur";
 import { CollisionHelper } from "../../../collisionhelper";
 import { ChangeColorEventParams, ElementSpriteList, ReceptorColor, SetColorEventParams } from "../../../types";
+import { Box } from "../../box";
 import { LogicReceptor } from "../../logic/logicreceptor";
 import { Neighborhood } from "../../logic/neighborhood";
+import { GameSystem } from "../../system";
 
 type ReceptorOptions = {
   pos: Vector,
@@ -49,9 +51,14 @@ export abstract class AReceptorBase extends Actor {
     // no permite asegurarle al compilador que el objeto con el que
     // interactúas es un AReceptor, puedes hacer EventHelper.emit<T>(evento, actor, parámetros: T)
     // para activar estos eventos
+    this.on('pointerdown', this.onClick.bind(this));
     this.events.on('changecolor', this.changeColorEvent.bind(this));
     this.events.on('setcolor', this.setColorEvent.bind(this));
     this.events.on('updatesystemreceptor',this.updateSystemReceptorEvent.bind(this));
+  }
+
+  protected onClick() {
+    GameSystem.usePowerUp('receptor', new Box(this));
   }
 
   protected addGraphics() {
@@ -63,6 +70,10 @@ export abstract class AReceptorBase extends Actor {
   public onInitialize() {
     this.addGraphics();
     this.setupEvents();
+  }
+
+  public clean() {
+    this._logicReceptor.clean();
   }
 
   //Neighbor-related

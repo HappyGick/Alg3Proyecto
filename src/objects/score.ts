@@ -1,12 +1,21 @@
-export class Score {
-    currentScore:number;
+import { ITextReactor } from "../types";
+import { Observer } from "./observer";
+
+export class Score implements ITextReactor<number> {
+    private currentScore: Observer<number>;
+
     constructor(){
-        this.currentScore = 0;
+        this.currentScore = new Observer(0);
     }
+
+    public watch(callback: (s: number) => void) {
+        this.currentScore.subscribe(callback);
+    }
+
     //! Temporary solution, needs proper Math function
-    addScore(n:number){
-        this.currentScore += n + Math.floor(this.currentScore*0.1);
-        //TEST Every time score is added, send console log
-            console.log(this.currentScore);
+    public addScore(n:number){
+        let score = this.currentScore.value;
+        score += n;
+        this.currentScore.update(score);
     }
 }

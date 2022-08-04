@@ -8,6 +8,10 @@ export class Observer<T> {
         this.data = value;
     }
 
+    public get value(): T {
+        return this.data;
+    }
+
     public subscribe(callback: ObserverCallback<T>) {
         this.updateCallbacks.push(callback);
     }

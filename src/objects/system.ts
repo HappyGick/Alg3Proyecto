@@ -1,4 +1,7 @@
 import { PieceColor, ReceptorColor } from "../types";
+import { UIGenericText } from "../ui/generictext";
+import { PowerUpBase, SenderType } from "./abstract/base/powerupbase";
+import { Box } from "./box";
 import { LogicCompositePiece } from "./logic/logiccompositepiece";
 import { LogicReceptor } from "./logic/logicreceptor";
 import { Neighborhood } from "./logic/neighborhood";
@@ -7,13 +10,39 @@ import { TryInsert } from "./logic/Restrictions/insert";
 import { InsertChecker } from "./logic/Restrictions/insertchecker";
 import { TryMatch } from "./logic/Restrictions/match";
 import { MatchChecker } from "./logic/Restrictions/matchchecker";
+import { Observer } from "./observer";
 import { Score } from "./score";
 
 export class GameSystem {
-    static insertReceptor:LogicReceptor<ReceptorColor,number>|undefined;
-    static regionGenerator:HexagonRegion = new HexagonRegion();
-    static scorer = new Score();
+    private static insertReceptor:LogicReceptor<ReceptorColor,number>|undefined;
+    private static regionGenerator:HexagonRegion = new HexagonRegion();
+    private static scorer = new Score();
+    private static activePowerUp?: PowerUpBase<any>;
+    private static powerUpName: Observer<string> = new Observer("");
     
+    public static setPowerUp(p: PowerUpBase<any> | undefined) {
+        this.activePowerUp = p;
+        if (p) this.powerUpName.update(p.name);
+        else this.powerUpName.update("None");
+    }
+
+    public static usePowerUp(senderType: SenderType, senderObject: Box<any>): boolean {
+        if (this.activePowerUp) {
+            this.activePowerUp.apply(senderType, senderObject);
+            this.setPowerUp(undefined);
+            return true;
+        }
+        return false;
+    }
+
+    public static bindPowerUpName(label: UIGenericText) {
+        label.bindTextOn("Power up: [val]", this.powerUpName);
+    }
+
+    public static bindScore(label: UIGenericText) {
+        label.bindTextTo("Score: [val]", this.scorer);
+    }
+
     static setInsertReceptor(receptor:LogicReceptor<ReceptorColor,number>){
         GameSystem.insertReceptor = receptor;
     }
